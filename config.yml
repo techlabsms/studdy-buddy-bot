@@ -1,0 +1,21 @@
+
+csv: C:\Users\andre\Downloads\responses-fake.csv
+separator: ;
+
+columns:
+   - name: What is your first name?
+   - last name: What is your last name?
+   - email: Under which *email* can we reach out to you during the bootcamp?
+   - track: Wich track are you interested on?
+
+track channels:
+   AI: G0194S0P81M
+   Web: G019KQKRGQK
+   UX: C019KQJ7NV9
+   Data: C019KJEK79Q
+
+buddy groups:
+   prefix: buddies_group
+   start message: >
+
+   members: 2
