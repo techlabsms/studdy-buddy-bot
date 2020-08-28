@@ -6,17 +6,18 @@ import yaml
 import logging
 import pandas as pd
 import numpy as np
+import pyfiglet
 from slack import WebClient, errors
 
 
 # Set Logging
-logging.basicConfig(format='%(levelname)s : %(module)s : %(funcName)s >> %(message)s',
+logging.basicConfig(format='%(levelname)s : %(module)s : %(funcName)s >> %(message)s\n',
                     #level=logging.DEBUG)
                     level=logging.INFO)
 # read token
 if len(sys.argv) >= 2:
     token = sys.argv[1]
-    logging.info("Token set to: {}".format(token))
+    logging.debug("Token set to: {}".format(token))
 else:
     logging.error("Not enough Arguments! (need token)")
     raise Exception('give the xoxb token as the first argument')
@@ -57,27 +58,18 @@ class BuddyGroup:
     Buddy Group
     """
 
-    def __init__(self, suffix, track):
-        self.members = []
-        self.size = 0
+    def __init__(self, suffix, track, members):
+        self.members = members
+        self.size = len(members)
         self.slack_id = ''
         # Set Track
         self.track = track
         # Set the Name
         self.name = "{}-{}-{}".format(cfg['buddy groups']['prefix'], track, suffix).lower()
-        # Set max size
-        self.max_size = cfg['buddy groups']['members']
 
-    def check_size(self):
-        self.size = len(self.members)
-        return self.size
 
-    def add_member(self, email, name, id):
-        new_member = {'id': id,
-                      'name': name,
-                      'email': email}
-        self.members.append(new_member)
-        #return new_member
+
+
 
 
 
@@ -109,3 +101,45 @@ def fill_user_ids(App, df, email_column):
             except KeyError:
                 logging.debug('No Email found for user with id {}'.format(user['id']))
     return df
+
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+
+def terminal_intro(title):
+    print("{:_^61}".format("_"))
+    ascii_banner = pyfiglet.figlet_format(title)
+    print(ascii_banner)
+    print("{:^61}".format("By Andrés David Vega Botero"))
+    print("{:_^61}".format("_"))
+    print()

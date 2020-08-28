@@ -17,5 +17,6 @@ track channels:
 buddy groups:
    prefix: buddies_group
    start message: >
-
-   members: 2
+      Hey dear #codeathome Team, this is just a test, but of you are seeing this, it means it's working!
+   members max: 3
+   members min: 1
