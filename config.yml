@@ -3,19 +3,22 @@ csv: C:\Users\andre\Downloads\responses-fake.csv
 separator: ;
 
 columns:
-   - name: What is your first name?
-   - last name: What is your last name?
-   - email: Under which *email* can we reach out to you during the bootcamp?
-   - track: Wich track are you interested on?
+   - name: name
+   - last name: last name
+   - email: email
+   - track1: track1
+   - track2: track2
+   - track3: track3
+   - track4: track4
 
 track channels:
    AI: G0194S0P81M
-   Web: G019KQKRGQK
+   WebDev: G019KQKRGQK
    UX: C019KQJ7NV9
-   Data: C019KJEK79Q
+   DataSc: C019KJEK79Q
 
 buddy groups:
-   prefix: buddies_group
+   prefix: trackstudy-test6-buddies
    start message: >
       Hey dear #codeathome Team, this is just a test, but of you are seeing this, it means it's working!
    members max: 3

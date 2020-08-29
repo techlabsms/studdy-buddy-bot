@@ -50,28 +50,31 @@ for row in range(0, len(df)):
 logging.info("User IDs are valid!")
 
 # Add the Users to the Track Channel
+track_comlumns = ['track1', 'track2', 'track3', 'track4']
 if query_yes_no("Should I Add the Users to the respective track channels?"):
     for row in range(0, len(df)):
-        user_track = df['track'][row]
-        user_id = df['ID'][row]
-        channel_id = cfg['track channels'][user_track]
-        user_email = df['email'][row]
-        try:
-            App.add_to_channel(user_id, channel_id)
-            logging.info("user {} with ID {} was added to the channel {}({})".format(user_email,
-                                                                                     user_id,
-                                                                                     user_track,
-                                                                                     channel_id))
-        except errors.SlackApiError:
-            logging.error("could not Add user {} with ID {} to the channel {}({})".format(user_email,
-                                                                                          user_id,
-                                                                                          user_track,
-                                                                                          channel_id))
+        for track_comlumn in track_comlumns:
+            if str(df[track_comlumn][row]) != 'nan':
+                user_track = df[track_comlumn][row]
+                user_id = df['ID'][row]
+                channel_id = cfg['track channels'][user_track]
+                user_email = df['email'][row]
+                try:
+                    App.add_to_channel(user_id, channel_id)
+                    logging.info("user {} with ID {} was added to the channel {}({})".format(user_email,
+                                                                                             user_id,
+                                                                                             user_track,
+                                                                                             channel_id))
+                except errors.SlackApiError:
+                    logging.error("could not Add user {} with ID {} to the channel {}({})".format(user_email,
+                                                                                                  user_id,
+                                                                                                  user_track,
+                                                                                                  channel_id))
 
 # Create Data frames for each track
 tracks_dfs = dict()
 for key, val in cfg['track channels'].items():
-    track_filter = df['track'] == key
+    track_filter = df[track_comlumns[0]] == key
     tracks_dfs[key] = df[track_filter]
 
 # Create the groups
@@ -151,12 +154,13 @@ if query_yes_no("Should I Proceed?"):
     for buddy_group in buddy_groups:
         # Create Channel
         try:
-            response = App.client.conversations_create(name=buddy_group.name)
+            response = App.client.conversations_create(name=buddy_group.name, is_private=True)
         except errors.SlackApiError:
             logging.warning("Cannot create the channel #{}, will try with the name #{}".format(buddy_group.name,
                                                                                                buddy_group.name + '_2'))
             try:
-                response = App.client.conversations_create(name=buddy_group.name + '_2')
+                response = App.client.conversations_create(name=buddy_group.name + '_2', is_private=True)
+
             except errors.SlackApiError:
                 logging.error("Cannot create the channel #{} or #{}".format(buddy_group.name,
                                                                             buddy_group.name + '_2'))
